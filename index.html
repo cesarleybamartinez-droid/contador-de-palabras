@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Contador profesional de palabras, caracteres y métricas de lectura en tiempo real">
+    <title>Contador de Palabras & Métricas de Redacción</title>
+    <!-- Los estilos los crearemos en la siguiente etapa -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Favicon vectorial SVG -->
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-content">
+            <div class="header-text">
+                <h1>Analizador de Texto en Tiempo Real</h1>
+                <p>Estadísticas precisas de redacción, oraciones y tiempo de lectura</p>
+            </div>
+            <!-- Botón de cambio de tema (reutilizando nuestra buena práctica) -->
+            <button type="button" id="theme-toggle" class="btn-theme-toggle" aria-label="Cambiar a modo oscuro" title="Cambiar tema">
+                <span id="theme-icon" aria-hidden="true">&#x1F319;</span>
+            </button>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <!-- SECCIÓN 1: Área de Entrada de Texto y Herramientas -->
+        <section class="editor-section" aria-labelledby="editor-heading">
+            <h2 id="editor-heading" class="visually-hidden">Área de Redacción</h2>
+
+            <!-- Barra de utilidades superiores -->
+            <div class="editor-toolbar">
+                <div class="toolbar-actions">
+                    <button type="button" id="btn-uppercase" class="btn-action" title="Convertir a mayúsculas">MAYÚSCULAS</button>
+                    <button type="button" id="btn-lowercase" class="btn-action" title="Convertir a minúsculas">minúsculas</button>
+                    <button type="button" id="btn-copy" class="btn-action" title="Copiar texto">Copiar</button>
+                    <button type="button" id="btn-clear" class="btn-action btn-danger" title="Borrar todo">Limpiar</button>
+                </div>
+
+                <!-- Selector de límite opcional -->
+                <div class="limit-selector">
+                    <label for="char-limit">Límite:</label>
+                    <select id="char-limit">
+                        <option value="0">Sin límite</option>
+                        <option value="280">X / Twitter (280)</option>
+                        <option value="500">Resumen corto (500)</option>
+                        <option value="1000">LinkedIn Post (1,000)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Área de texto principal -->
+            <div class="textarea-wrapper">
+                <label for="text-input" class="visually-hidden">Escribe o pega tu texto aquí</label>
+                <textarea 
+                    id="text-input" 
+                    placeholder="Escribe o pega tu texto aquí para analizarlo en tiempo real..." 
+                    rows="10" 
+                    autofocus
+                    spellcheck="true"
+                ></textarea>
+            </div>
+
+            <!-- Barra visual de progreso hacia el límite -->
+            <div id="progress-container" class="progress-container" hidden>
+                <div class="progress-info">
+                    <span id="progress-text">0 / 280 caracteres</span>
+                    <span id="progress-percentage">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN 2: Métricas y Estadísticas Detalladas -->
+        <section class="stats-section" aria-labelledby="stats-heading">
+            <h2 id="stats-heading" class="visually-hidden">Panel de Estadísticas</h2>
+
+            <!-- Tarjetas de métricas principales -->
+            <div class="stats-grid">
+                <div class="stat-card highlight">
+                    <span class="stat-label">Palabras</span>
+                    <span id="word-count" class="stat-value" aria-live="polite">0</span>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-label">Caracteres (con espacios)</span>
+                    <span id="char-count" class="stat-value" aria-live="polite">0</span>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-label">Caracteres (sin espacios)</span>
+                    <span id="char-no-spaces-count" class="stat-value" aria-live="polite">0</span>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-label">Oraciones</span>
+                    <span id="sentence-count" class="stat-value" aria-live="polite">0</span>
+                </div>
+
+                <div class="stat-card">
+                    <span class="stat-label">Párrafos</span>
+                    <span id="paragraph-count" class="stat-value" aria-live="polite">0</span>
+                </div>
+
+                <div class="stat-card time-card">
+                    <span class="stat-label">Tiempo de Lectura</span>
+                    <span id="reading-time" class="stat-value-sub">~0 min</span>
+                    <small>A 200 palabras/min</small>
+                </div>
+
+                <div class="stat-card time-card">
+                    <span class="stat-label">Tiempo de Habla</span>
+                    <span id="speaking-time" class="stat-value-sub">~0 min</span>
+                    <small>A 130 palabras/min</small>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p><small>&copy; 2026 Analizador de Texto | Proyecto 02 de Formación Frontend, realizado por Cesar Leyba.</small></p>
+    </footer>
+
+    <script src="script.js" defer></script>
+</body>
+</html>

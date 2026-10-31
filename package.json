@@ -1,0 +1,29 @@
+{
+  "name": "contador_de_palabras",
+  "version": "1.0.0",
+  "description": "Contador de Palabras y Métricas de Redacción en Tiempo Real",
+  "main": "script.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "bench": "node analyzer.bench.js",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:load": "autocannon -c 100 -d 10 http://127.0.0.1:8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cesarleybamartinez-droid/contador-de-palabras.git"
+  },
+  "keywords": [],
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/cesarleybamartinez-droid/contador-de-palabras/issues"
+  },
+  "homepage": "https://github.com/cesarleybamartinez-droid/contador-de-palabras#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.64.1",
+    "autocannon": "^8.0.0",
+    "vitest": "^5.0.5"
+  }
+}

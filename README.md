@@ -28,14 +28,51 @@ Contador de Palabras y Métricas de Redacción en Tiempo Real
 
 ---
 
+## Suite Integral de Pruebas y Calidad (QA)
+
+El proyecto fue sometido a una pirámide completa de pruebas de software:
+
+### 1. Auditoría Web (Google Lighthouse)
+
+- **Rendimiento (Performance)**: **100 / 100**
+- **Accesibilidad (A11y)**: **100 / 100**
+- **Mejores Prácticas**: **100 / 100**
+- **SEO**: **100 / 100**
+- **Agentic Browsing**: **2 / 2**
+
+### 2. Pruebas Unitarias de Lógica Pura (Vitest)
+
+- **15 pruebas unitarias automatizadas** en `analyzer.test.js` evaluando funciones puras independientes del DOM.
+- Casos límite evaluados: cadenas vacías, saltos de línea repetidos, signos solitarios (`... --- ???`), números decimales y caracteres con acentos/eñes.
+- Tiempo de ejecución de la suite: **~240 ms**.
+
+### 3. Pruebas End-to-End (Playwright)
+
+- **7 pruebas completas de interacción de usuario** en `e2e/app.spec.js` ejecutadas sobre un navegador Chromium real:
+  - Carga inicial y autofocus en el editor.
+  - Actualización de contadores en vivo al teclear.
+  - Transformación de texto a mayúsculas/minúsculas.
+  - Visualización y alerta por desbordamiento de la barra de progreso.
+  - Cambio y persistencia de temas claro y oscuro.
+  - Limpieza del editor con confirmación.
+  - Prueba de estrés con 50,000 palabras en el navegador (**renderizado en 191 ms**).
+
+### 4. Pruebas de Rendimiento y Estrés (Benchmark & Load Testing)
+
+- **Benchmark Algorítmico (`analyzer.bench.js`)**:
+  - Procesamiento masivo de **100,000 palabras (~550 KB de texto)** en memoria.
+  - Tiempo total de ejecución del pipeline: **25.54 ms** (>100 ops/segundo).
+- **Prueba de Carga Concurrente (Autocannon)**:
+  - **100 conexiones concurrentes continuas** durante 10 segundos.
+  - **1,771 peticiones por segundo** respondidas con **0% de errores** (18,000 peticiones en 10s con latencia media de 55ms).
+
+---
+
 ## Tecnologías y Arquitectura
 
-- **HTML5**: Semántica estricta (`<header>`, `<main>`, `<section>`, `<textarea>`, `<button>`), accesibilidad con clases `.visually-hidden` y roles ARIA (`role="progressbar"`).
-- **CSS3**: Variables nativas (_Design Tokens_), Reset universal con control de especificidad para `[hidden]`, animaciones sutiles y maquetación fluida sin dependencias externas.
-- **Vanilla JavaScript (ES6+)**:
-  - Arquitectura modular desacoplada: Caché del DOM $\rightarrow$ Funciones puras de cálculo $\rightarrow$ Controlador de interfaz (UI) $\rightarrow$ Manejadores de eventos.
-  - Expresiones regulares modernas compatibles con Unicode (`/\p{L}\p{N}/gu`).
-  - Prevención de _frame drops_ con `requestAnimationFrame`.
+- **Frontend**: HTML5 Semántico, CSS3 Modular (Variables nativas y CSS Grid), Vanilla JavaScript (ES6+ Modules).
+- **Testing & Tooling**: Node.js, Vitest, Playwright, Autocannon y HTTP-Server.
+- **Arquitectura**: Separación limpia en capas (Lógica Pura en `analyzer.js` $\rightarrow$ Caché DOM y UI Controller en `script.js` $\rightarrow$ Suites de Test en `analyzer.test.js` y `e2e/`).
 
 ---
 
@@ -43,9 +80,36 @@ Contador de Palabras y Métricas de Redacción en Tiempo Real
 
 ```text
 contador_de_palabras/
-├── index.html        # Estructura semántica y componentes de la UI
-├── style.css         # Tokens de diseño, CSS Grid y temas claro/oscuro
-├── script.js         # Lógica pura de cálculo y controlador de eventos
-├── favicon.svg       # Icono vectorial tipográfico en formato SVG
-└── README.md         # Documentación técnica del proyecto
+├── index.html            # Estructura semántica y componentes de la UI
+├── style.css             # Tokens de diseño, CSS Grid y temas claro/oscuro
+├── script.js             # Controlador de interfaz (UI Controller) y eventos
+├── analyzer.js           # Módulo de lógica pura de cálculo (desacoplado del DOM)
+├── analyzer.test.js      # 15 Pruebas unitarias con Vitest
+├── analyzer.bench.js     # Benchmark de estrés para 100,000 palabras
+├── e2e/
+│   └── app.spec.js       # 7 Pruebas End-to-End con Playwright
+├── playwright.config.js  # Configuración de Playwright con webServer local
+├── package.json          # Dependencias y scripts de prueba (test, bench, e2e, load)
+├── favicon.svg           # Icono vectorial tipográfico en formato SVG
+├── .gitignore            # Exclusión de node_modules y reportes temporales
+└── README.md             # Documentación técnica y reporte de QA
+
+## Instalación y Comandos de Prueba
+
+1. Clona el repositorio: git clone https://github.com/cesarleybamartinez-droid/contador-de-palabras.git
+cd contador-de-palabras
+
+2. Instala las dependencias de desarrollo:
+npm install
+
+3. Ejecuta los diferentes niveles de prueba:
+
+# Pruebas Unitarias (Nivel 2)
+npm test
+# Benchmark de Estrés (Nivel 4)
+npm run bench
+# Pruebas End-to-End (Nivel 3)
+npm run test:e2e
+# Prueba de Carga Masiva con 100 usuarios (Nivel 4)
+npm run test:load
 ```

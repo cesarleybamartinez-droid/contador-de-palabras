@@ -331,7 +331,7 @@ body {
 }
 
 .stat-card.highlight .stat-label {
-    color: var(--clr-primary);
+    color: var(--clr-primary-hover);
 }
 
 .stat-card.highlight .stat-value {

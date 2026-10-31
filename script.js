@@ -1,15 +1,24 @@
 /**
  * PROYECTO 02: Contador de Palabras, Caracteres y Métricas en Tiempo Real
- * Arquitectura: Modular (Caché DOM -> Lógica Pura -> UI Controller -> Eventos)
- * Versión: 2.0 (Hardened & Accessible)
+ * Arquitectura: Modular (Imports de Lógica Pura -> Caché DOM -> UI Controller -> Eventos)
+ * Versión: 2.1 (Modularizada con Unit Tests)
  */
 
 // ==========================================================================
-// 1. CONSTANTES DE NEGOCIO Y CONFIGURACIÓN
+// 1. IMPORTACIONES DE LÓGICA PURA Y CONFIGURACIÓN
 // ==========================================================================
-const CONFIG = {
-    WORDS_PER_MINUTE_READ: 200,   // Velocidad promedio de lectura silenciosa
-    WORDS_PER_MINUTE_SPEAK: 130,  // Velocidad promedio de habla en oratoria
+import {
+    CONFIG,
+    calculateWords,
+    calculateCharsNoSpaces,
+    calculateSentences,
+    calculateParagraphs,
+    calculateReadingTime,
+    calculateSpeakingTime
+} from './analyzer.js';
+
+// Constantes locales exclusivas de la interfaz
+const UI_CONFIG = {
     MAX_CONFIRM_LENGTH: 50,       // Caracteres mínimos para pedir confirmación al borrar
     TOAST_DURATION: 1500          // Duración del mensaje "¡Copiado!" (ms)
 };
@@ -49,64 +58,8 @@ const DOM = {
 };
 
 // ==========================================================================
-// 3. LÓGICA PURA DE CÁLCULO (Business Logic)
-// Funciones puras e independientes del DOM.
+// 3. CONTROLADOR DE INTERFAZ (UI Controller con rAF)
 // ==========================================================================
-
-/**
- * Cuenta palabras reales que contengan caracteres alfanuméricos válidos.
- * Ignora secuencias solitarias de signos de puntuación (... --- ???).
- */
-function calculateWords(text) {
-    if (!text || text.trim().length === 0) return 0;
-    // Coincide con palabras reales usando clases Unicode (\p{L} letras, \p{N} números)
-    const matches = text.trim().match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu);
-    return matches ? matches.length : 0;
-}
-
-/**
- * Cuenta caracteres excluyendo cualquier espacio en blanco o salto de línea.
- */
-function calculateCharsNoSpaces(text) {
-    return text ? text.replace(/\s+/g, '').length : 0;
-}
-
-/**
- * Cuenta oraciones evitando falsos positivos con decimales (ej. 3.50).
- */
-function calculateSentences(text) {
-    if (!text || text.trim().length === 0) return 0;
-    // Divide por signos [.!?] seguidos de espacio/salto o fin de texto
-    const sentences = text.trim().split(/(?<=[.!?])(?:\s+|$)/).filter(s => s.trim().length > 0);
-    return sentences.length;
-}
-
-/**
- * Cuenta párrafos reales con texto, ignorando múltiples Enter seguidos.
- */
-function calculateParagraphs(text) {
-    if (!text || text.trim().length === 0) return 0;
-    const paragraphs = text.split(/\n+/).filter(para => para.trim().length > 0);
-    return paragraphs.length;
-}
-
-/**
- * Calcula el tiempo estimado de lectura en minutos.
- */
-function calculateReadingTime(words) {
-    if (words === 0) return '~0 min';
-    const minutes = Math.ceil(words / CONFIG.WORDS_PER_MINUTE_READ);
-    return `~${minutes} min`;
-}
-
-/**
- * Calcula el tiempo estimado de habla/exposición en minutos.
- */
-function calculateSpeakingTime(words) {
-    if (words === 0) return '~0 min';
-    const minutes = Math.ceil(words / CONFIG.WORDS_PER_MINUTE_SPEAK);
-    return `~${minutes} min`;
-}
 
 // ==========================================================================
 // 4. CONTROLADOR DE INTERFAZ (UI Controller con rAF)
